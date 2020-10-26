@@ -20,10 +20,11 @@ git add -A
 git commit -m 'deploy'
 
 # 添加远程仓库
-# git remote add origin [your repository url]
-
+git remote add origin git@github.com:Zora173/Zora173.github.io.git
+git remote add gitee git@gitee.com:zora173/Zora173.git
 # 发布到 GitHub Pages
-# git push -f origin master:gh-pages
+git push -f origin master:gh-pages
+git push -f gitee master:gh-pages
 
 # 如果发布到 https://<USERNAME>.github.io/<REPO>
 # git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
