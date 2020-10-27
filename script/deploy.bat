@@ -7,5 +7,5 @@ call git commit -m 'deploy'
 call git remote add origin git@github.com:Zora173/Zora173.github.io.git
 call git remote add gitee git@gitee.com:zora173/Zora173.git
 call git push -f origin master:gh-pages
-call git push -f gitee master:gh-pages
+call git push -f gitee master:master
 

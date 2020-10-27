@@ -1,0 +1,67 @@
+name: CI
+
+# 触发条件：在 push 到 master 分支后
+on:
+  push:
+    branches:
+      - master
+env:
+  GITHUB_TOKEN: ${{ secrets.BLOG_ACCESS_TOKEN }}
+  GITEE_TOKEN: ${{ secrets.GITEE_BLOG_ACCESS_TOKEN }}
+  GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+  GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+  GITHUB_USER_NAME: ${{ secrets.USER_NAME }}
+  GITEE_USER_NAME: ${{ secrets.USER_NAME_GITEE }}
+  SERVER_CHAN_URL: ${{ secrets.SERVER_CHAN_URL }}
+  GITEE_CSRF_TOKEN: ${{ secrets.GITEE_CSRF_TOKEN }}
+  GITEE_SESSION_N: ${{ secrets.GITEE_SESSION_N }}
+
+# 任务
+jobs:
+  Deploy:
+    # 服务器环境：最新版 Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      # 拉取代码
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+          # Number of commits to fetch. 0 indicates all history.
+          fetch-depth: 0
+
+      # 生成静态文件
+      - name: Install and Build 🔧
+        run: |
+          rm -rf public
+          yarn install
+          yarn build
+
+      # 初始化编译后的目录
+      - name: Init Dist ⌛
+        run: |
+          git init
+          git config user.email $GIT_USER_EMAIL
+          git config user.name $GIT_USER_NAME
+          git add -A
+          git commit --allow-empty -m 'deploy'
+          git remote add github https://$GITHUB_TOKEN@github.com/$GITHUB_USER_NAME/$GITHUB_USER_NAME.github.io.git
+          git remote add gitee  https://$GITEE_USER_NAME:$GITEE_TOKEN@gitee.com/$GITEE_USER_NAME/$GITEE_USER_NAME.git
+        working-directory: ./public
+
+      # 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages 🎐
+        run: git push -f github master:gh-pages
+        working-directory: ./public
+
+      # 部署到 Gitee Pages
+      - name: Deploy to Gitee Pages 🎉
+        run: |
+          git push -f gitee master:master
+          sleep 5s
+          echo ">>>Start Update Gitee Pages>>>"
+          curl "https://gitee.com/$GITEE_USER_NAME/$GITEE_USER_NAME/pages/rebuild" -H 'Connection: keep-alive' -H 'Origin: https://gitee.com' -H "X-CSRF-Token: $GITEE_CSRF_TOKEN" -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Accept: */*' -H 'Sec-Fetch-Dest: empty' -H 'X-Requested-With: XMLHttpRequest' -H 'DNT: 1' -H 'Sec-Fetch-Site: same-origin' -H 'Sec-Fetch-Mode: cors' -H "Referer: https://gitee.com/$GITEE_USER_NAME/$GITEE_USER_NAME/pages" -H 'Accept-Language: zh-CN,zh;q=0.9' -H "Cookie: user_locale=zh-CN; oschina_new_user=false; tz=Asia%2FShanghai; remote_way=ssh; gitee-session-n=$GITEE_SESSION_N" --data 'branch=master&build_directory=&force_https=true' --compressed
+          echo ""
+          echo "<<<End Update Gitee Pages<<<"
+        working-directory: ./public
+
