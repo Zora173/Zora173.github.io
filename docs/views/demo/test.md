@@ -1,5 +1,5 @@
 ---
-title: TEst
+title: Test
 date: 2020-10-26
 description: Hello World
 meta:
@@ -8,7 +8,7 @@ meta:
 lang: zh-CN
 sidebar: "false"
 categories:
-  - demo
+  - demoe
 tags:
   - hello
 ---
