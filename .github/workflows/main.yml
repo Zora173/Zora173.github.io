@@ -6,13 +6,12 @@ on:
     branches:
       - master
 env:
-  GITHUB_TOKEN: ${{ secrets.BLOG_ACCESS_TOKEN }}
-  GITEE_TOKEN: ${{ secrets.GITEE_BLOG_ACCESS_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
   GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
   GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
-  GITHUB_USER_NAME: ${{ secrets.USER_NAME }}
-  GITEE_USER_NAME: ${{ secrets.USER_NAME_GITEE }}
-  SERVER_CHAN_URL: ${{ secrets.SERVER_CHAN_URL }}
+  GITHUB_USER_NAME: ${{ secrets.GH_USER_NAME }}
+  GITEE_USER_NAME: ${{ secrets.GITEE_USER_NAME }}
   GITEE_CSRF_TOKEN: ${{ secrets.GITEE_CSRF_TOKEN }}
   GITEE_SESSION_N: ${{ secrets.GITEE_SESSION_N }}
 
