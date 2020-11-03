@@ -1,5 +1,5 @@
 ---
-title: 同步改  按下 `alt` 键  鼠标可以选择多个地方同时操作
+title: 文章发布教程
 date: 2020-10-30 23:52:00
 description: 同步改  按下 ` al
 meta:
